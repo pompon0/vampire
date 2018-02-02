@@ -24,6 +24,7 @@
 #include "Lib/Environment.hpp"
 #include "Lib/Int.hpp"
 #include "Lib/Portability.hpp"
+#include "Lib/Predictor.hpp"
 #include "Lib/Stack.hpp"
 #include "Lib/System.hpp"
 #include "Lib/ScopedLet.hpp"
@@ -354,18 +355,16 @@ static unsigned milliToDeci(unsigned timeInMiliseconds) {
   return timeInMiliseconds/100;
 }
 
-// Simple one-after-the-other priority.
+// start at an "undecided", but optimistic priority
 float PortfolioProcessPriorityPolicy::staticPriority(vstring sliceCode)
 {
-  static float priority = 0.;
-  priority += 1.;
-  return priority;
+  return 0.2;
 }
 
-//should never be called
+// query the predictor service
 float PortfolioProcessPriorityPolicy::dynamicPriority(pid_t pid)
 {
-  return 0;
+  return predictionFor(pid);
 }
 
 PortfolioSliceExecutor::PortfolioSliceExecutor(PortfolioMode *mode)
@@ -506,7 +505,7 @@ void PortfolioMode::runSlice(Options& strategyOpt)
   env.timer->reset();
   env.timer->start();
   TimeCounter::reinitialize();
-  Timer::setTimeLimitEnforcement(true);
+  //Timer::setTimeLimitEnforcement(true);
 
   Options opt = strategyOpt;
   //we have already performed the normalization
