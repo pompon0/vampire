@@ -355,7 +355,7 @@ static unsigned milliToDeci(unsigned timeInMiliseconds) {
   return timeInMiliseconds/100;
 }
 
-// start at an "undecided", but optimistic priority
+// start at an "undecided" priority
 float PortfolioProcessPriorityPolicy::staticPriority(vstring sliceCode)
 {
   return 0.2;
@@ -364,6 +364,9 @@ float PortfolioProcessPriorityPolicy::staticPriority(vstring sliceCode)
 // query the predictor service
 float PortfolioProcessPriorityPolicy::dynamicPriority(pid_t pid)
 {
+#ifdef VDUMP
+  return 0.6;
+#endif
   return predictionFor(pid);
 }
 
@@ -563,6 +566,9 @@ void PortfolioMode::runSlice(Options& strategyOpt)
     */
   }
 
+#ifdef VDUMP
+  env.dumpFeatures(!static_cast<bool>(resultValue));
+#endif
   STOP_CHECKING_FOR_ALLOCATOR_BYPASSES;
 
   exit(resultValue);
