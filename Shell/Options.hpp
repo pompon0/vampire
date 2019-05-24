@@ -744,8 +744,7 @@ public:
 
   enum class AgeWeightRatioShape {
     CONSTANT,
-    DECAY,
-    CONVERGE
+    EXPONENTIAL
   };
     
     //==========================================================
@@ -1965,8 +1964,10 @@ public:
   long maxPassive() const { return _maxPassive.actualValue; }
   int maxWeight() const { return _maxWeight.actualValue; }
   int ageRatio() const { return _ageWeightRatio.actualValue; }
+  int ageRatioB() const { return _ageWeightRatioB.actualValue; }
   void setAgeRatio(int v){ _ageWeightRatio.actualValue = v; }
   int weightRatio() const { return _ageWeightRatio.otherValue; }
+  int weightRatioB() const { return _ageWeightRatioB.otherValue; }
   void setWeightRatio(int v){ _ageWeightRatio.otherValue = v; }
 	AgeWeightRatioShape ageWeightRatioShape() const { return _ageWeightRatioShape.actualValue; }
 	int ageWeightRatioShapeFrequency() const { return _ageWeightRatioShapeFrequency.actualValue; }
@@ -2218,8 +2219,9 @@ private:
   BoolOptionValue _encode;
 
   RatioOptionValue _ageWeightRatio;
-	ChoiceOptionValue<AgeWeightRatioShape> _ageWeightRatioShape;
-	UnsignedOptionValue _ageWeightRatioShapeFrequency;
+  RatioOptionValue _ageWeightRatioB;
+  ChoiceOptionValue<AgeWeightRatioShape> _ageWeightRatioShape;
+  UnsignedOptionValue _ageWeightRatioShapeFrequency;
   BoolOptionValue _literalMaximalityAftercheck;
   BoolOptionValue _arityCheck;
   

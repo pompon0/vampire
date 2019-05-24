@@ -51,21 +51,18 @@ using namespace Kernel;
 
 
 AWPassiveClauseContainer::AWPassiveClauseContainer(const Options& opt)
-:  _ageQueue(opt), _weightQueue(opt), _balance(0), _size(0), _opt(opt)
+:  _ageQueue(opt), _weightQueue(opt), _ageRatio(opt.ageRatio()), _ageRatioB(opt.ageRatioB()),
+   _weightRatio(opt.weightRatio()), _weightRatioB(opt.weightRatioB()),
+   _balance(0), _size(0), _opt(opt)
 {
   CALL("AWPassiveClauseContainer::AWPassiveClauseContainer");
 
-  if(_opt.ageWeightRatioShape() == Options::AgeWeightRatioShape::CONVERGE) {
-    _ageRatio = 1;
-    _weightRatio = 1;
-  }
-  else {
-    _ageRatio = _opt.ageRatio();
-    _weightRatio = _opt.weightRatio();
-  }
   ASS_GE(_ageRatio, 0);
   ASS_GE(_weightRatio, 0);
+  ASS_GE(_ageRatioB, 0);
+  ASS_GE(_weightRatioB, 0);
   ASS(_ageRatio > 0 || _weightRatio > 0);
+  ASS(_ageRatioB > 0 || _weightRatioB > 0);
 }
 
 AWPassiveClauseContainer::~AWPassiveClauseContainer()
@@ -272,27 +269,23 @@ Clause* AWPassiveClauseContainer::popSelected()
   static unsigned count = 0;
   count++;
 
-  bool is_converging = shape == Options::AgeWeightRatioShape::CONVERGE;
-  int targetAgeRatio = is_converging ? _opt.ageRatio() : 1;
-  int targetWeightRatio = is_converging ? _opt.weightRatio() : 1;
-
   if(count % frequency == 0) {
     switch(shape) {
     case Options::AgeWeightRatioShape::CONSTANT:
       break;
-    case Options::AgeWeightRatioShape::DECAY:
-    case Options::AgeWeightRatioShape::CONVERGE:
-      int ageDifference = targetAgeRatio - _ageRatio;
-      int weightDifference = targetWeightRatio - _weightRatio;
-      int bonus = is_converging ? 1 : -1;
-      int ageUpdate = (ageDifference + bonus) / 2;
-      int weightUpdate = (weightDifference + bonus) / 2;
+    case Options::AgeWeightRatioShape::EXPONENTIAL:
+      int ageDifference = _ageRatioB - _ageRatio;
+      int weightDifference = _weightRatioB - _weightRatio;
+      int bonusAge = (_ageRatioB > _ageRatio) ? 1 : -1;
+      int bonusWeight = (_weightRatioB > _weightRatio) ? 1 : -1;
+      int ageUpdate = (ageDifference + bonusAge) / 2;
+      int weightUpdate = (weightDifference + bonusWeight) / 2;
 
       _ageRatio += ageUpdate;
       _weightRatio += weightUpdate;
    }
   }
-  std::cerr << _ageRatio << "\t" << _weightRatio << std::endl;
+  //std::cerr << _ageRatio << "\t" << _weightRatio << std::endl;
   _size--;
 
   bool byWeight;

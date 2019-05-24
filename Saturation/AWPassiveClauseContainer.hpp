@@ -105,8 +105,10 @@ private:
   WeightQueue _weightQueue;
   /** the age ratio */
   int _ageRatio;
+  int _ageRatioB;
   /** the weight ratio */
   int _weightRatio;
+  int _weightRatioB;
   /** current balance. If &lt;0 then selection by age, if &gt;0
    * then by weight */
   int _balance;
