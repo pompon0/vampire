@@ -931,7 +931,7 @@ void Options::Options::init()
 #endif
            _unificationWithAbstraction = ChoiceOptionValue<UnificationWithAbstraction>("unification_with_abstraction","uwa",
                                              UnificationWithAbstraction::OFF,
-                                             {"off","interpreted_only","one_side_interpreted","one_side_constant","all","ground","fixed"});
+                                             {"off","interpreted_only","one_side_interpreted","one_side_constant","all","ground"});
            _unificationWithAbstraction.description="";
            _unificationWithAbstraction.tag(OptionTag::INFERENCES);
            _lookup.insert(&_unificationWithAbstraction);

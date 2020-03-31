@@ -229,7 +229,6 @@ public:
     CONSTANT,
     ALL,
     GROUND,
-    FIXED
   };
 
   enum class Induction : unsigned int {
