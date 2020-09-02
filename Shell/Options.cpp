@@ -101,7 +101,7 @@ void Options::Options::init()
                                        );
     _memoryLimit.description="Memory limit in MB";
     _lookup.insert(&_memoryLimit);
-#if !__APPLE__ && !__CYGWIN__
+#if !VAMPIRE__APPLE__ && !VAMPIRE__CYGWIN__
     _memoryLimit.addHardConstraint(lessThanEq((unsigned)Lib::System::getSystemMemory()));
 #endif
 

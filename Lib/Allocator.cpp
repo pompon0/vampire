@@ -45,7 +45,7 @@
 #endif
 
 #if USE_SYSTEM_ALLOCATION
-# if __APPLE__
+# if VAMPIRE__APPLE__
 #  include <malloc/malloc.h>
 # else
 #  include <malloc.h>

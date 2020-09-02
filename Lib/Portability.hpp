@@ -25,11 +25,15 @@
 // Detect compiler
 
 #ifndef __APPLE__
-# define __APPLE__ 0
+# define VAMPIRE__APPLE__ 0
+#elif
+# define VAMPIRE__APPLE__ 1
 #endif
 
 #ifndef __CYGWIN__
-# define __CYGWIN__ 0
+# define VAMPIRE__CYGWIN__ 0
+#elif
+# define VAMPIRE__CYGWIN__ 1
 #endif
 
 //////////////////////////////////////////////////////
