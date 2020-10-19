@@ -24,7 +24,7 @@
  * @since 01/05/2002, Manchester
  */
 
-#include <Kernel/TermIterators.hpp>
+#include "Kernel/TermIterators.hpp"
 #include "Lib/Allocator.hpp"
 
 #include "Kernel/Term.hpp"

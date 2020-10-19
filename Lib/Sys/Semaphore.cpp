@@ -11,7 +11,6 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/sem.h>
-
 #include "Lib/Exception.hpp"
 #include "Lib/Int.hpp"
 #include "Lib/List.hpp"
@@ -20,6 +19,7 @@
 #include "Multiprocessing.hpp"
 
 #include "Semaphore.hpp"
+#include "semop_gvisor.h"
 
 namespace Lib
 {
@@ -125,7 +125,7 @@ void Semaphore::doInc(int num)
   buf.sem_flg=SEM_UNDO;
 
   errno=0;
-  int res=semop(semid, &buf, 1);
+  int res=semop_gvisor(semid, &buf, 1);
   if(res==-1) {
     SYSTEM_FAIL("Cannot increase semaphore.",errno);
   }
@@ -147,7 +147,7 @@ void Semaphore::doIncPersistent(int num)
   buf.sem_flg=0;
 
   errno=0;
-  int res=semop(semid, &buf, 1);
+  int res=semop_gvisor(semid, &buf, 1);
   if(res==-1) {
     SYSTEM_FAIL("Cannot increase semaphore.",errno);
   }
@@ -170,7 +170,7 @@ void Semaphore::doDec(int num)
 
 retry_decreasing:
   errno=0;
-  int res=semop(semid, &buf, 1);
+  int res=semop_gvisor(semid, &buf, 1);
   if(res==-1 && errno==EINTR) {
     //we just received a signal -- now we can continue waiting
     goto retry_decreasing;
